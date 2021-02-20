@@ -13,16 +13,16 @@ cur.execute("create table if not exists contact(contactid integer primary key au
 photo = PhotoImage(file="phonebook.gif")
 photoimage = photo.subsample(5, 5)
 Label(root, text='', image=photoimage).grid(row=0, column=0)
-root.title('Phonebook')
-Label(root, text='Phonebook', relief='ridge', font='times 30 bold italic', bg='gold').grid(row=0,
+root.title('Contact Details')
+Label(root, text='Contact Details', relief='ridge', font='times 30 bold italic', bg='gold').grid(row=0,
                                                                                            column=2)  # gui design
 Label(root, text='Name', font='times 10').grid(row=2, column=0)
 e1 = Entry(root)
 e1.grid(row=2, column=2)
-Label(root, text='Phone Number', font='times 10').grid(row=12, column=0)
+Label(root, text='Contact Number', font='times 10').grid(row=12, column=0)
 e2 = Entry(root)
 e2.grid(row=12, column=2)
-Label(root, text='Email ID', font='times 10').grid(row=14, column=0)
+Label(root, text='Email Address', font='times 10').grid(row=14, column=0)
 e3 = Entry(root)
 e3.grid(row=14, column=2)
 
@@ -34,7 +34,7 @@ def new():  # function to save contact into database
         cur.execute("insert into contact(name, phno, emailid) values(?,?,?)", (e1.get(), e2.get(), e3.get()))
         cur.execute("select contactid curval from contact")
         con.commit()
-        showinfo("Save Contact", "Contact successfully saved !!")
+        showinfo("Save Contact", "Contact saved successfully !!")
         e1.delete(0, END)
         e2.delete(0, END)
         e3.delete(0, END)
@@ -54,7 +54,7 @@ def search_sort():  # searching a contact
     global az
     az = s
 
-    def showval(e=1):  # to search the contact whena character is typed
+    def showval(e=1):
         Lb.delete(0, END)
         cur.execute("select contactid, name, phno, emailid from contact where (name like (?)) order by name", ('%'+g.get()+'%',))
         global az
@@ -66,7 +66,7 @@ def search_sort():  # searching a contact
         def delete_fun():
             cur.execute('delete from contact where contactid=?', (iq,))
             con.commit()
-            showinfo('Delete', 'Contact Removed Successfully !!')
+            showinfo('Delete', 'Contact removed Successfully !!')
             close_()
 
         Button(root3, text='Delete', command=delete_fun).grid(row=4, column=0)
@@ -76,12 +76,12 @@ def search_sort():  # searching a contact
         li2 = cur.fetchall()
         Lb.delete(0, END)
         Lb.insert(0, "Name     :  " + (str)(li2[0][0]))
-        Lb.insert(1,  "Phone   : " + (str)(li2[0][1]))
+        Lb.insert(1,  "Phone Contact  : " + (str)(li2[0][1]))
         Lb.insert(2, "Email Address   : " + (str)(li2[0][2]))
     cur.execute('select contactid curval from contact')
     q = cur.fetchall()
     l = len(q)
-    for i in range(l):  # loop to print all the contacts in the listbox
+    for i in range(l):
         cur.execute("select name from contact  where contactid=? order by name", (q[i][0],))
         s = cur.fetchall()
         if s[0][0] != '':
@@ -108,7 +108,7 @@ def close_main(e=1):
 Button(root, text='Close', command=close_main).grid(row=17, column=2)
 
 
-def edit():  # function to edit the saved contacts
+def edit():
     root4 = Tk()
     root4.title('Search a contact to edit')
     root4.geometry('550x700')
@@ -140,7 +140,7 @@ def edit():  # function to edit the saved contacts
         if s[0][0] != '':
             Lb1.insert(i, s[0])
 
-    def new_window(e=1):  # edit window
+    def new_window(e=1): 
         root5 = Tk()
         root5.title('Edit Window')
         Label(root5, text='Edit Contact', relief='ridge', font='times 30 bold italic', bg='gold').grid(row=0, column=2)
@@ -161,7 +161,7 @@ def edit():  # function to edit the saved contacts
         e2.insert(0, (li2[0][1]))
         e3.insert(0, (li2[0][2]))
 
-        def fillup():  # refilling the selected contact into the entry box
+        def fillup():
             fn = e1.get()
             pn = e2.get()
             em = e3.get()
